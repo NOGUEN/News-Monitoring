@@ -1,6 +1,8 @@
 <?php
 namespace App\Models;
 
+use PDO;
+
 class News {
     public static function all() {
         $db = db_connect();

@@ -4,9 +4,9 @@ namespace App\Models;
 use PDO;
 
 class NewsSite {
-    public static function all() {
+    public static function getAll() {
         $db = db_connect();
-        $stmt = $db->query('SELECT * FROM news_sites ORDER BY name');
+        $stmt = $db->query("SELECT * FROM news_sites ORDER BY name");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
