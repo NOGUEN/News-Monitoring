@@ -23,7 +23,7 @@ class NewsController {
         }
     }
 
-    public function show($siteId) {
+    public function getNewsBySite($siteId) {
         header('Content-Type: application/json');
 
         try {
@@ -31,6 +31,23 @@ class NewsController {
             echo json_encode([
                 'status' => 'success',
                 'data' => $news
+            ]);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getAllNews() {
+        header('Content-Type: application/json');
+
+        try {
+            $newsSites = News::getAll();
+            echo json_encode([
+                'status' => 'success',
+                'data' => $newsSites
             ]);
         } catch (\Exception $e) {
             echo json_encode([

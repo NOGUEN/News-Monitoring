@@ -37,12 +37,18 @@ function fetchAndStoreNews() {
 
         if ($rss) {
             foreach ($rss->channel->item as $item) {
-                
                 $title = (string) $item->title;
-                $link = (string) $item->link;
-                $published_at = date('Y-m-d H:i:s', strtotime((string) $item->pubDate));
+                $link = trim((string) $item->link);
+                $published_at = parseDate((string)$item->pubDate);
 
-                
+                $stmt = $db->prepare('SELECT COUNT(*) FROM news WHERE link = ?');
+                $stmt->execute([$link]);
+                $count = $stmt->fetchColumn();
+
+                if ($count > 0) {
+                    continue;
+                }
+
                 $stmt = $db->prepare('INSERT INTO news (site_id, title, link, published_at) VALUES (?, ?, ?, ?)');
                 $stmt->execute([$site['id'], $title, $link, $published_at]);
                 
@@ -54,7 +60,24 @@ function fetchAndStoreNews() {
     }
 }
 
-fetchAndStoreNews();
+function parseDate($dateString) {
+    $formats = [
+        'D, d M Y H:i:s T',
+        'D, j M Y H:i:s O',
+        'D, d M Y H:i:s P',
+        'Y.m.d',
+    ];
 
+    foreach ($formats as $format) {
+        $date = DateTime::createFromFormat($format, $dateString);
+        if ($date !== false) {
+            return $date->format('Y-m-d H:i:s');
+        }
+    }
+
+    return null;
+}
+
+fetchAndStoreNews();
 
 ?>

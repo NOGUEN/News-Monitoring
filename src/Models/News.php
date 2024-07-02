@@ -4,7 +4,7 @@ namespace App\Models;
 use PDO;
 
 class News {
-    public static function all() {
+    public static function getAll() {
         $db = db_connect();
         $stmt = $db->query('SELECT * FROM news ORDER BY published_at DESC');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
