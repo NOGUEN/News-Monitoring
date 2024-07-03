@@ -12,7 +12,6 @@ class NewsController {
             $newsSites = NewsSite::getAll();
 
             echo json_encode([
-                'status' => 'success',
                 'data' => $newsSites
             ]);
         } catch (\Exception $e) {
@@ -27,10 +26,9 @@ class NewsController {
         header('Content-Type: application/json');
 
         try {
-            $news = News::findBySite($siteId);
+            $news = News::getNewsBySite($siteId);
             echo json_encode([
-                'status' => 'success',
-                'data' => $news
+                'news' => $news
             ]);
         } catch (\Exception $e) {
             echo json_encode([
@@ -46,8 +44,7 @@ class NewsController {
         try {
             $newsSites = News::getAll();
             echo json_encode([
-                'status' => 'success',
-                'data' => $newsSites
+                'news' => $newsSites
             ]);
         } catch (\Exception $e) {
             echo json_encode([
@@ -55,5 +52,60 @@ class NewsController {
                 'message' => $e->getMessage()
             ]);
         }
+    }
+
+    public function getPagedNews($params) {
+        header('Content-Type: application/json');
+
+        try {
+            $limit = isset($params['limit']) ? (int)$params['limit'] : 10;
+            $page = isset($params['page']) ? (int)$params['page'] : 1;
+            $offset = ($page - 1) * $limit;
+    
+            $news = News::getPagedNews($limit, $offset);
+            echo json_encode();
+        } catch (\Exception $e) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getPagedNewsBySiteId($params) {
+        header('Content-Type: application/json');
+
+        try {
+            $siteId = isset($params['siteId']) ? (int)$params['siteId'] : 1;
+            $limit = isset($params['limit']) ? (int)$params['limit'] : 10;
+            $page = isset($params['page']) ? (int)$params['page'] : 1;
+            $offset = ($page - 1) * $limit;
+    
+            $news = News::getPagedNewsBySiteId($siteId, $limit, $offset);
+            echo json_encode($news);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getNewsPageCount($limit) {
+        $totalNews = News::countNews();
+        $totalPages = ceil($totalNews / $limit);
+
+        header('Content-Type: application/json');
+        echo json_encode(['total_pages' => $totalPages]);
+    }
+
+    public function getNewsPageCountBySite($params) {
+        $siteId = isset($params['siteId']) ? (int)$params['siteId'] : 1;
+        $limit = isset($params['limit']) ? (int)$params['limit'] : 10;
+        $totalNews = News::countNewsBySiteId($siteId);
+        $totalPages = ceil($totalNews / $limit);
+
+        header('Content-Type: application/json');
+        echo json_encode(['total_pages' => $totalPages]);
     }
 }
