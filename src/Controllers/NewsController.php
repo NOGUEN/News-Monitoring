@@ -12,7 +12,7 @@ class NewsController {
             $newsSites = NewsSite::getAll();
 
             echo json_encode([
-                'data' => $newsSites
+                'news' => $newsSites
             ]);
         } catch (\Exception $e) {
             echo json_encode([
@@ -63,7 +63,9 @@ class NewsController {
             $offset = ($page - 1) * $limit;
     
             $news = News::getPagedNews($limit, $offset);
-            echo json_encode($news);
+            echo json_encode([
+                'news' => $news
+            ]);
         } catch (\Exception $e) {
             echo json_encode([
                 'status' => 'error',
@@ -82,7 +84,9 @@ class NewsController {
             $offset = ($page - 1) * $limit;
     
             $news = News::getPagedNewsBySiteId($siteId, $limit, $offset);
-            echo json_encode($news);
+            echo json_encode([
+                'news' => $news
+            ]);
         } catch (\Exception $e) {
             echo json_encode([
                 'status' => 'error',
