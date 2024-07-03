@@ -63,7 +63,7 @@ class NewsController {
             $offset = ($page - 1) * $limit;
     
             $news = News::getPagedNews($limit, $offset);
-            echo json_encode();
+            echo json_encode($news);
         } catch (\Exception $e) {
             echo json_encode([
                 'status' => 'error',

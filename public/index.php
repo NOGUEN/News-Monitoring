@@ -14,10 +14,10 @@ $router->get('/news/{siteId}', [$newsController, 'getNewsBySite']);
 
 $router->get('/news', [$newsController, 'getAllNews']);
 
-$router->get('/news/page', function() use ($newsController) {
+$router->get('/news/page/default', function() use ($newsController) {
     $params = [
         'limit' => isset($_GET['limit']) ? $_GET['limit'] : 10,
-        'page' => isset($_GET['page']) ? $_GET['page'] : 1
+        'page' => isset($_GET['page']) ? $_GET['page'] : 1,
     ];
     $newsController->getPagedNews($params);
 });
