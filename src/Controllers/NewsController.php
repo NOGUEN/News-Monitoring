@@ -12,7 +12,7 @@ class NewsController {
             $newsSites = NewsSite::getAll();
 
             echo json_encode([
-                'news' => $newsSites
+                'news_sites' => $newsSites
             ]);
         } catch (\Exception $e) {
             echo json_encode([
